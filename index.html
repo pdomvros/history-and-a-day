@@ -24,14 +24,54 @@
     .level-easy { background: #2ecc71; color: white; }
     .level-medium { background: #f1c40f; color: #333; }
     .level-hard { background: #e74c3c; color: white; }
-    .quiz-card { background: linear-gradient(180deg, #ffffff, #e0e0e0); border-radius: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 2rem; margin: 0 1rem; max-width: 600px; }
-    .question { font-size: 1.25rem; margin-bottom: 1rem; }
-    .options { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
-    .option-btn { padding: 0.75rem 1.5rem; font-size: 1rem; border: none; border-radius: 0.75rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.1s; }
+    .quiz-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 50vh;
+      padding: 1rem;
+    }
+    .quiz-card { 
+      background: linear-gradient(180deg, #ffffff, #e0e0e0); 
+      border-radius: 1rem; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+      padding: 2rem; 
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    .question { font-size: 1.25rem; margin-bottom: 1.5rem; }
+    .options { 
+      display: flex; 
+      justify-content: center; 
+      gap: 1rem; 
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .option-btn { 
+      padding: 0.75rem 1.5rem; 
+      font-size: 1rem; 
+      border: none; 
+      border-radius: 0.75rem; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+      cursor: pointer; 
+      transition: transform 0.1s; 
+      min-width: 120px;
+    }
     .option-btn:hover { transform: scale(1.05); }
     .true-btn { background: #2ecc71; color: white; }
     .false-btn { background: #e74c3c; color: white; }
-    .feedback { font-weight: bold; margin-top: 1rem; text-align: center; }
+    .feedback { 
+      font-weight: bold; 
+      margin: 1.5rem 0;
+      text-align: center; 
+      min-height: 24px;
+    }
+    .next-btn {
+      background: #3498db;
+      color: white;
+      margin-top: 1rem;
+    }
     .footer { text-align: center; margin: 2rem 0; }
   </style>
 </head>
@@ -58,13 +98,16 @@
     </div>
   </section>
 
-  <section class="quiz-card" id="quiz-card" hidden>
-    <div class="question" id="question-text"></div>
-    <div class="options">
-      <button class="option-btn true-btn" data-opt="true">✅ Σωστό</button>
-      <button class="option-btn false-btn" data-opt="false">❌ Λάθος</button>
+  <section class="quiz-container">
+    <div class="quiz-card" id="quiz-card" hidden>
+      <div class="question" id="question-text"></div>
+      <div class="options" id="options">
+        <button class="option-btn true-btn" data-opt="true">✅ Σωστό</button>
+        <button class="option-btn false-btn" data-opt="false">❌ Λάθος</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <button class="btn next-btn" id="next-btn" hidden>Επόμενη Ερώτηση →</button>
     </div>
-    <div class="feedback" id="feedback"></div>
   </section>
 
   <section class="footer">
@@ -306,6 +349,8 @@
     const qCard = document.getElementById('quiz-card');
     const controls = document.getElementById('controls');
     const restart = document.getElementById('restart-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const options = document.getElementById('options');
 
     function clearSel(group) { group.forEach(b => b.classList.remove('selected')); }
 
@@ -347,6 +392,8 @@
       qText.textContent = data.q;
       feedback.textContent = '';
       qCard.hidden = false;
+      options.hidden = false;
+      nextBtn.hidden = true;
       startTimer(data.time);
     }
 
@@ -374,13 +421,18 @@
         feedback.textContent = `Λάθος! Η σωστή απάντηση ήταν: ${correct === 'true' ? 'Σωστό' : 'Λάθος'}`;
       }
       boardEl.textContent = `Score: ${score}`;
-      idx++;
-      setTimeout(() => showQuestion(), 1500);
+      options.hidden = true;
+      nextBtn.hidden = false;
     }
 
     document.querySelectorAll('.option-btn').forEach(btn => {
       btn.onclick = () => answer(btn.dataset.opt);
     });
+
+    nextBtn.onclick = () => {
+      idx++;
+      showQuestion();
+    };
 
     function endQuiz() {
       qCard.hidden = true;
