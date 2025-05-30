@@ -315,8 +315,7 @@
         </section>
 
         <section class="quiz-container">
-            <div class="quiz-card" id="quiz-card" hidden>
-                <div class="question" id="question-text"></div>
+            <div class="quiz-card" id="quiz-card" class="hidden"> <div class="question" id="question-text"></div>
                 <div class="options" id="options">
                     <button class="option-btn true-btn" data-opt="true">✅ Σωστό</button>
                     <button class="option-btn false-btn" data-opt="false">❌ Λάθος</button>
@@ -473,7 +472,7 @@
         function tryStartQuiz() {
             if (selectedCategory && selectedLevel) {
                 // Defensive check: ensure data exists
-                if (!quizData[selectedCategory] || !quizData[selectedCategory][selectedLevel]) {
+                if (!quizData[selectedCategory] || !quizData[selectedCategory][selectedLevel] || quizData[selectedCategory][selectedLevel].length === 0) { // Added length check
                     alert('Δεν υπάρχουν ερωτήσεις για αυτή την επιλογή. Παρακαλώ διαλέξτε άλλη κατηγορία/επίπεδο.');
                     // Reset selections if no questions found
                     selectedCategory = null;
@@ -529,10 +528,10 @@
             if (selectedOption === correctAnswer) {
                 score += 10;
                 feedbackEl.textContent = `Σωστά! ✅`;
-                feedbackEl.style.color = varToHex('--easy-color'); // Green feedback
+                feedbackEl.style.color = getCssVariableValue('--easy-color'); // Green feedback
             } else {
                 feedbackEl.textContent = `Λάθος! ❌ Η σωστή απάντηση ήταν: ${correctAnswer === 'true' ? 'Σωστό' : 'Λάθος'}`;
-                feedbackEl.style.color = varToHex('--hard-color'); // Red feedback
+                feedbackEl.style.color = getCssVariableValue('--hard-color'); // Red feedback
             }
 
             boardEl.textContent = `Score: ${score}`;
@@ -574,19 +573,19 @@
             restartBtn.classList.add('hidden');
             clearSelections([...categoryButtons, ...levelButtons]); // Clear all button selections
             optionsContainer.classList.remove('hidden'); // Ensure options are visible for next round
-            feedbackEl.style.color = varToHex('--dark-blue'); // Reset feedback color
+            feedbackEl.style.color = getCssVariableValue('--dark-blue'); // Reset feedback color
             showControls(); // Go back to selection screen
         });
 
+        // Helper function to get computed CSS variable value (for JS color application)
+        function getCssVariableValue(variable) { // Renamed for clarity
+            const style = getComputedStyle(document.documentElement);
+            const value = style.getPropertyValue(variable).trim();
+            return value;
+        }
+
         // Initial state
         showControls();
-
-        // Helper function to get computed CSS variable value (for JS color application)
-        function varToHex(variable) {
-            const style = getComputedStyle(document.documentElement);
-            const color = style.getPropertyValue(variable).trim();
-            return color;
-        }
     </script>
 </body>
 </html>
