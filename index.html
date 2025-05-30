@@ -1,453 +1,332 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>History and a Day Quiz</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
-    .credit { text-align: center; padding: 0.5rem; font-size: 0.9rem; background: #ecf0f1; }
-    header { background: #1abc9c; color: white; padding: 1rem; text-align: center; position: relative; }
-    header h1 { margin: 0; font-size: 1.5rem; }
-    header .timer { position: absolute; top: 1rem; right: 1rem; background: #e67e22; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: bold; }
-    header .scoreboard { position: absolute; top: 1rem; left: 1rem; background: #34495e; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: bold; }
-    .controls { display: flex; flex-direction: column; align-items: center; margin: 2rem 0; }
-    .btn-group { display: flex; justify-content: center; flex-wrap: wrap; margin: 0.5rem; }
-    .btn { padding: 0.75rem 1.5rem; margin: 0.25rem; border: none; border-radius: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; font-size: 1rem; transition: transform 0.1s; }
-    .btn:hover { transform: scale(1.05); }
-    .btn.selected { box-shadow: 0 0 0 3px #34495e; }
-    .category-1 { background: #a3d5ff; }
-    .category-2 { background: #ffb3c1; }
-    .category-3 { background: #fff5b7; }
-    .category-4 { background: #c1ffd7; }
-    .category-5 { background: #d9b3ff; }
-    .level-easy { background: #2ecc71; color: white; }
-    .level-medium { background: #f1c40f; color: #333; }
-    .level-hard { background: #e74c3c; color: white; }
-    .quiz-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 50vh;
-      padding: 1rem;
-    }
-    .quiz-card { 
-      background: linear-gradient(180deg, #ffffff, #e0e0e0); 
-      border-radius: 1rem; 
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-      padding: 2rem; 
-      max-width: 600px;
-      width: 100%;
-      text-align: center;
-    }
-    .question { font-size: 1.25rem; margin-bottom: 1.5rem; }
-    .options { 
-      display: flex; 
-      justify-content: center; 
-      gap: 1rem; 
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .option-btn { 
-      padding: 0.75rem 1.5rem; 
-      font-size: 1rem; 
-      border: none; 
-      border-radius: 0.75rem; 
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-      cursor: pointer; 
-      transition: transform 0.1s; 
-      min-width: 120px;
-    }
-    .option-btn:hover { transform: scale(1.05); }
-    .true-btn { background: #2ecc71; color: white; }
-    .false-btn { background: #e74c3c; color: white; }
-    .feedback { 
-      font-weight: bold; 
-      margin: 1.5rem 0;
-      text-align: center; 
-      min-height: 24px;
-    }
-    .next-btn {
-      background: #3498db;
-      color: white;
-      margin-top: 1rem;
-    }
-    .footer { text-align: center; margin: 2rem 0; }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>History and a Day Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
+        .credit {
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 1.35rem;
+            background: #ecf0f1;
+            font-style: italic;
+        }
+        .credit span { display: block; }
+        header { background: #1abc9c; color: white; padding: 1rem; text-align: center; position: relative; }
+        header h1 { margin: 0; font-size: 1.5rem; }
+        header .timer { position: absolute; top: 1rem; right: 1rem; background: #e67e22; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: bold; }
+        header .scoreboard { position: absolute; top: 1rem; left: 1rem; background: #34495e; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: bold; }
+        .controls { display: flex; flex-direction: column; align-items: center; margin: 2rem 0; }
+        .btn-group { display: flex; justify-content: center; flex-wrap: wrap; margin: 0.5rem; }
+        .btn { padding: 0.75rem 1.5rem; margin: 0.25rem; border: none; border-radius: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; font-size: 1rem; transition: transform 0.1s; }
+        .btn:hover { transform: scale(1.05); }
+        .btn.selected { box-shadow: 0 0 0 3px #34495e; }
+        .category-1 { background: #a3d5ff; }
+        .category-2 { background: #ffb3c1; }
+        .category-3 { background: #fff5b7; }
+        .category-4 { background: #c1ffd7; }
+        .category-5 { background: #d9b3ff; }
+        .level-easy { background: #2ecc71; color: white; }
+        .level-medium { background: #f1c40f; color: #333; }
+        .level-hard { background: #e74c3c; color: white; }
+        .quiz-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50vh;
+            padding: 1rem;
+        }
+        .quiz-card {
+            background: linear-gradient(180deg, #ffffff, #e0e0e0);
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        .question { font-size: 1.25rem; margin-bottom: 1.5rem; }
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .option-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.1s;
+            min-width: 120px;
+        }
+        .option-btn:hover { transform: scale(1.05); }
+        .true-btn { background: #2ecc71; color: white; }
+        .false-btn { background: #e74c3c; color: white; }
+        .feedback {
+            font-weight: bold;
+            margin: 1.5rem 0;
+            text-align: center;
+            min-height: 24px;
+        }
+        .footer { text-align: center; margin: 2rem 0; }
+    </style>
 </head>
 <body>
-  <div class="credit">Created by Panagiotis Domvros 2025 (CC BY-NC)</div>
-  <header>
-    <h1>History and a Day</h1>
-    <div class="timer" id="timer">00"</div>
-    <div class="scoreboard" id="scoreboard">Score: 0</div>
-  </header>
+    <div class="credit">Created by Panagiotis Domvros 2025 (CC BY-NC)<span>Διευθυντής 1ου Γυμνασίου Πυλαίας</span></div>
+    <header>
+        <h1>History and a Day</h1>
+        <div class="timer" id="timer">00"</div>
+        <div class="scoreboard" id="scoreboard">Score: 0</div>
+    </header>
 
-  <section class="controls" id="controls">
-    <div class="btn-group categories">
-      <button class="btn category-1" data-cat="1">🌟 Αρχαιότητα</button>
-      <button class="btn category-2" data-cat="2">🏺 Ελληνιστικοί & Ρωμαϊκοί</button>
-      <button class="btn category-3" data-cat="3">🏰 Βυζαντινοί Χρόνοι</button>
-      <button class="btn category-4" data-cat="4">🛡️ Νεότεροι Χρόνοι</button>
-      <button class="btn category-5" data-cat="5">🚀 Σύγχρονη Εποχή</button>
-    </div>
-    <div class="btn-group levels">
-      <button class="btn level-easy" data-level="easy">😊 Εύκολο</button>
-      <button class="btn level-medium" data-level="medium">😐 Μέτριο</button>
-      <button class="btn level-hard" data-level="hard">😣 Δύσκολο</button>
-    </div>
-  </section>
+    <section class="controls" id="controls">
+        <div class="btn-group categories">
+            <button class="btn category-1" data-cat="1">🌟 Αρχαιότητα</button>
+            <button class="btn category-2" data-cat="2">🏺 Ελληνιστικοί & Ρωμαϊκοί</button>
+            <button class="btn category-3" data-cat="3">🏰 Βυζαντινοί Χρόνοι</button>
+            <button class="btn category-4" data-cat="4">🛡️ Νεότεροι Χρόνοι</button>
+            <button class="btn category-5" data-cat="5">🚀 Σύγχρονη Εποχή</button>
+        </div>
+        <div class="btn-group levels">
+            <button class="btn level-easy" data-level="easy">😊 Εύκολο</button>
+            <button class="btn level-medium" data-level="medium">😐 Μέτριο</button>
+            <button class="btn level-hard" data-level="hard">😣 Δύσκολο</button>
+        </div>
+    </section>
 
-  <section class="quiz-container">
-    <div class="quiz-card" id="quiz-card" hidden>
-      <div class="question" id="question-text"></div>
-      <div class="options" id="options">
-        <button class="option-btn true-btn" data-opt="true">✅ Σωστό</button>
-        <button class="option-btn false-btn" data-opt="false">❌ Λάθος</button>
-      </div>
-      <div class="feedback" id="feedback"></div>
-      <button class="btn next-btn" id="next-btn" hidden>Επόμενη Ερώτηση →</button>
-    </div>
-  </section>
+    <section class="quiz-container">
+        <div class="quiz-card" id="quiz-card" hidden>
+            <div class="question" id="question-text"></div>
+            <div class="options" id="options">
+                <button class="option-btn true-btn" data-opt="true">✅ Σωστό</button>
+                <button class="option-btn false-btn" data-opt="false">❌ Λάθος</button>
+            </div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+    </section>
 
-  <section class="footer">
-    <button id="restart-btn" class="btn level-medium" hidden>Ξεκίνα ξανά 🎉</button>
-  </section>
+    <section class="footer">
+        <button id="restart-btn" class="btn level-medium" hidden>Ξεκίνα ξανά 🎉</button>
+    </section>
 
-  <script>
-    const quizData = {
-      "1": {
-        "medium": [
-          { q: "Η Πρώτη Ολυμπιάδα πραγματοποιήθηκε το 776 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Πρώτη Ολυμπιάδα πραγματοποιήθηκε το 777 π.Χ.", ans: "false", time: 10 },
-          { q: "Η Ιωνική Επανάσταση έγινε το 499 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Ιωνική Επανάσταση έγινε το 500 π.Χ.", ans: "false", time: 10 },
-          { q: "Η Ναυμαχία της Λάδης συνέβη το 494 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Ναυμαχία της Λάδης συνέβη το 493 π.Χ.", ans: "false", time: 10 },
-          { q: "Η Σύνοδος του Ισθμού έγινε το 481 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Σύνοδος του Ισθμού έγινε το 480 π.Χ.", ans: "false", time: 10 },
-          { q: "Η ίδρυση της Συμμαχίας της Δήλου έγινε το 478 π.Χ.", ans: "true", time: 10 },
-          { q: "Η ίδρυση της Συμμαχίας της Δήλου έγινε το 479 π.Χ.", ans: "false", time: 10 },
-          { q: "Η εκστρατεία στη Σικελία έγινε το 415 π.Χ.", ans: "true", time: 10 },
-          { q: "Η εκστρατεία στη Σικελία έγινε το 416 π.Χ.", ans: "false", time: 10 },
-          { q: "Ο Δεκελεικός Πόλεμος έγινε το 413 π.Χ.", ans: "true", time: 10 },
-          { q: "Ο Δεκελεικός Πόλεμος έγινε το 414 π.Χ.", ans: "false", time: 10 },
-          { q: "Η Μάχη στα Λεύκτρα έγινε το 371 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Μάχη στα Λεύκτρα έγινε το 370 π.Χ.", ans: "false", time: 10 },
-          { q: "Η Μάχη της Μαντινείας έγινε το 362 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Μάχη της Μαντινείας έγινε το 363 π.Χ.", ans: "false", time: 10 }
-        ],
-        "easy": [
-          { q: "Η Μάχη του Μαραθώνα έγινε το 490 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Μάχη του Μαραθώνα έγινε το 489 π.Χ.", ans: "false", time: 10 },
-          { q: "Η Μάχη των Θερμοπυλών έγινε το 480 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Μάχη των Θερμοπυλών έγινε το 481 π.Χ.", ans: "false", time: 10 },
-          { q: "Η Ναυμαχία της Σαλαμίνας έγινε το 480 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Ναυμαχία της Σαλαμίνας έγινε το 479 π.Χ.", ans: "false", time: 10 },
-          { q: "Η Μάχη των Πλαταιών έγινε το 479 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Μάχη των Πλαταιών έγινε το 480 π.Χ.", ans: "false", time: 10 },
-          { q: "Ο Πελοποννησιακός Πόλεμος ξεκίνησε το 431 π.Χ.", ans: "true", time: 10 },
-          { q: "Ο Πελοποννησιακός Πόλεμος ξεκίνησε το 430 π.Χ.", ans: "false", time: 10 },
-          { q: "Ο Πελοποννησιακός Πόλεμος έληξε το 404 π.Χ.", ans: "true", time: 10 },
-          { q: "Ο Πελοποννησιακός Πόλεμος έληξε το 403 π.Χ.", ans: "false", time: 10 }
-        ],
-        "hard": []
-      },
-      "2": {
-        "easy": [
-          { q: "Ο Θάνατος του Μεγάλου Αλεξάνδρου έγινε το 323 π.Χ.", ans: "true", time: 10 },
-          { q: "Ο Θάνατος του Μεγάλου Αλεξάνδρου έγινε το 322 π.Χ.", ans: "false", time: 10 },
-          { q: "Τα εγκαίνια της Κωνσταντινούπολης έγιναν 11 Μαΐου 330 μ.Χ.", ans: "true", time: 10 },
-          { q: "Τα εγκαίνια της Κωνσταντινούπολης έγιναν 12 Μαΐου 330 μ.Χ.", ans: "false", time: 10 },
-          { q: "Ο Θάνατος του Κωνσταντίνου έγινε 27 Φεβρουαρίου 337 μ.Χ.", ans: "true", time: 10 },
-          { q: "Ο Θάνατος του Κωνσταντίνου έγινε 26 Φεβρουαρίου 337 μ.Χ.", ans: "false", time: 10 }
-        ],
-        "medium": [
-          { q: "Η ίδρυση Θεσσαλονίκης έγινε το 316 π.Χ.", ans: "true", time: 10 },
-          { q: "Η ίδρυση Θεσσαλονίκης έγινε το 317 π.Χ.", ans: "false", time: 10 },
-          { q: "Η άλωση Συρακουσών έγινε το 212 π.Χ.", ans: "true", time: 10 },
-          { q: "Η άλωση Συρακουσών έγινε το 213 π.Χ.", ans: "false", time: 10 },
-          { q: "Το Διάταγμα Μεδιολάνων εκδόθηκε Φεβρουάριο 313 μ.Χ.", ans: "true", time: 10 },
-          { q: "Το Διάταγμα Μεδιολάνων εκδόθηκε Μάρτιο 313 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η Νίκη Κωνσταντίνου και ο σχεδιασμός Νέας Ρώμης έγιναν Νοέμβριο 324 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η Νίκη Κωνσταντίνου και ο σχεδιασμός Νέας Ρώμης έγιναν Δεκέμβριο 324 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η Στέψη Θεοδόσιου Α' έγινε 17 Ιανουαρίου 379 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η Στέψη Θεοδόσιου Α' έγινε 18 Ιανουαρίου 379 μ.Χ.", ans: "false", time: 10 },
-          { q: "Ο οριστικός διαχωρισμός Ρωμαϊκής Αυτοκρατορίας έγινε το 395 μ.Χ.", ans: "true", time: 10 },
-          { q: "Ο οριστικός διαχωρισμός Ρωμαϊκής Αυτοκρατορίας έγινε το 396 μ.Χ.", ans: "false", time: 10 }
-        ],
-        "hard": [
-          { q: "Η ίδρυση Αντιόχειας έγινε το 300 π.Χ.", ans: "true", time: 10 },
-          { q: "Η ίδρυση Αντιόχειας έγινε το 301 π.Χ.", ans: "false", time: 10 },
-          { q: "Η Νίκη Μακεδόνων επί Γαλατών έγινε το 277 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Νίκη Μακεδόνων επί Γαλατών έγινε το 278 π.Χ.", ans: "false", time: 10 },
-          { q: "Η Μάχη της Ζάμας έγινε το 212 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Μάχη της Ζάμας έγινε το 211 π.Χ.", ans: "false", time: 10 },
-          { q: "Η Μάχη της Πύδνας έγινε το 168 π.Χ.", ans: "true", time: 10 },
-          { q: "Η Μάχη της Πύδνας έγινε το 169 π.Χ.", ans: "false", time: 10 },
-          { q: "Η κατάκτηση του ελληνικού κόσμου έγινε το 146 π.Χ.", ans: "true", time: 10 },
-          { q: "Η κατάκτηση του ελληνικού κόσμου έγινε το 145 π.Χ.", ans: "false", time: 10 },
-          { q: "Η κατάκτηση του ελληνιστικού κόσμου έγινε το 30 π.Χ.", ans: "true", time: 10 },
-          { q: "Η κατάκτηση του ελληνιστικού κόσμου έγινε το 29 π.Χ.", ans: "false", time: 10 },
-          { q: "Το Όραμα Κωνσταντίνου και η Μάχη Μουλβίας Γέφυρας έγιναν 28 Οκτωβρίου 312 μ.Χ.", ans: "true", time: 10 },
-          { q: "Το Όραμα Κωνσταντίνου και η Μάχη Μουλβίας Γέφυρας έγιναν 27 Οκτωβρίου 312 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η Ανάδειξη Βαλεντιανού Α' έγινε το 364 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η Ανάδειξη Βαλεντιανού Α' έγινε το 365 μ.Χ.", ans: "false", time: 10 }
-        ]
-      },
-      "3": {
-        "easy": [
-          { q: "Η ανάληψη του Ιουστινιανού Α' έγινε το 527 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η ανάληψη του Ιουστινιανού Α' έγινε το 528 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η εξέγερση Νίκα έγινε το 532 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η εξέγερση Νίκα έγινε το 531 μ.Χ.", ans: "false", time: 10 },
-          { q: "Τα εγκαίνια της Αγίας Σοφίας έγιναν 15 Αυγούστου 537 μ.Χ.", ans: "true", time: 10 },
-          { q: "Τα εγκαίνια της Αγίας Σοφίας έγιναν 16 Αυγούστου 537 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η ανάληψη του Ηρακλείου έγινε το 610 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η ανάληψη του Ηρακλείου έγινε το 609 μ.Χ.", ans: "false", time: 10 },
-          { q: "Το τέλος της Εικονομαχίας έγινε το 843 μ.Χ.", ans: "true", time: 10 },
-          { q: "Το τέλος της Εικονομαχίας έγινε το 844 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η Μάχη του Μαντζικέρτ έγινε το 1071 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η Μάχη του Μαντζικέρτ έγινε το 1070 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η Τέταρτη Σταυροφορία και Άλωση Κωνσταντινούπολης έγινε το 1204 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η Τέταρτη Σταυροφορία και Άλωση Κωνσταντινούπολης έγινε το 1205 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η Άλωση της Κωνσταντινούπολης από τους Οθωμανούς έγινε 29 Μαΐου 1453.", ans: "true", time: 10 },
-          { q: "Η Άλωση της Κωνσταντινούπολης από τους Οθωμανούς έγινε 30 Μαΐου 1453.", ans: "false", time: 10 }
-        ],
-        "medium": [
-          { q: "Το τέλος της Δυτικής Ρωμαϊκής Αυτοκρατορίας έγινε το 476 μ.Χ.", ans: "true", time: 10 },
-          { q: "Το τέλος της Δυτικής Ρωμαϊκής Αυτοκρατορίας έγινε το 475 μ.Χ.", ans: "false", time: 10 },
-          { q: "Ο Θάνατος του Ιουστινιανού έγινε το 565 μ.Χ.", ans: "true", time: 10 },
-          { q: "Ο Θάνατος του Ιουστινιανού έγινε το 566 μ.Χ.", ans: "false", time: 10 },
-          { q: "Οι πόλεμοι με το Περσικό Κράτος έγιναν μεταξύ 610–628 μ.Χ.", ans: "true", time: 10 },
-          { q: "Οι πόλεμοι με το Περσικό Κράτος έγιναν μεταξύ 609–627 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η Ανακατάληψη Ιερουσαλήμ έγινε το 629 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η Ανακατάληψη Ιερουσαλήμ έγινε το 630 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η Πολιορκία Κωνσταντινούπολης από Άραβες έγινε μεταξύ 717–718 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η Πολιορκία Κωνσταντινούπολης από Άραβες έγινε μεταξύ 716–717 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η στέψη του Βασιλείου Α' του Μακεδόνα έγινε το 867 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η στέψη του Βασιλείου Α' του Μακεδόνα έγινε το 868 μ.Χ.", ans: "false", time: 10 },
-          { q: "Ο Θάνατος του Βασιλείου Α' έγινε το 886 μ.Χ.", ans: "true", time: 10 },
-          { q: "Ο Θάνατος του Βασιλείου Α' έγινε το 887 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η Οριστικοποίηση του Σχίσματος Ανατολής–Δύσης έγινε το 1054.", ans: "true", time: 10 },
-          { q: "Η Οριστικοποίηση του Σχίσματος Ανατολής–Δύσης έγινε το 1055.", ans: "false", time: 10 },
-          { q: "Η Πρώτη Σταυροφορία έγινε μεταξύ 1096–1099.", ans: "true", time: 10 },
-          { q: "Η Πρώτη Σταυροφορία έγινε μεταξύ 1095–1098.", ans: "false", time: 10 },
-          { q: "Η Ανακατάληψη Κωνσταντινούπολης από τον Μιχαήλ Η' Παλαιολόγο έγινε το 1261.", ans: "true", time: 10 },
-          { q: "Η Ανακατάληψη Κωνσταντινούπολης από τον Μιχαήλ Η' Παλαιολόγο έγινε το 1262.", ans: "false", time: 10 },
-          { q: "Η ολοκλήρωση της οθωμανικής κατάκτησης του ελληνικού χώρου έγινε μεταξύ 1453–1461.", ans: "true", time: 10 },
-          { q: "Η ολοκλήρωση της οθωμανικής κατάκτησης του ελληνικού χώρου έγινε μεταξύ 1452–1460.", ans: "false", time: 10 }
-        ],
-        "hard": [
-          { q: "Η Άλωση Ρώμης από τους Βησιγότθους έγινε 23 Αυγούστου 410 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η Άλωση Ρώμης από τους Βησιγότθους έγινε 24 Αυγούστου 410 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η Πανώλη του Ιουστινιανού συνέβη μεταξύ 541–542 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η Πανώλη του Ιουστινιανού συνέβη μεταξύ 540–541 μ.Χ.", ans: "false", time: 10 },
-          { q: "Η Αρχή επαφών με τη Ρως του Κιέβου έγινε το 862 μ.Χ.", ans: "true", time: 10 },
-          { q: "Η Αρχή επαφών με τη Ρως του Κιέβου έγινε το 863 μ.Χ.", ans: "false", time: 10 },
-          { q: "Ο Όθων Α' στέφθηκε αυτοκράτορας της Αγίας Ρωμαϊκής Αυτοκρατορίας το 962.", ans: "true", time: 10 },
-          { q: "Ο Όθων Α' στέφθηκε αυτοκράτορας της Αγίας Ρωμαϊκής Αυτοκρατορίας το 963.", ans: "false", time: 10 },
-          { q: "Ο Ούγος Καπέτος στέφθηκε βασιλιάς της Γαλλίας το 987.", ans: "true", time: 10 },
-          { q: "Ο Ούγος Καπέτος στέφθηκε βασιλιάς της Γαλλίας το 988.", ans: "false", time: 10 },
-          { q: "Ο Γουλιέλμος ο Κατακτητής κατέλαβε την Αγγλία το 1066.", ans: "true", time: 10 },
-          { q: "Ο Γουλιέλμος ο Κατακτητής κατέλαβε την Αγγλία το 1067.", ans: "false", time: 10 },
-          { q: "Η Αιχμαλωσία της Αβινιόν έγινε μεταξύ 1305–1377.", ans: "true", time: 10 },
-          { q: "Η Αιχμαλωσία της Αβινιόν έγινε μεταξύ 1304–1376.", ans: "false", time: 10 },
-          { q: "Ο Εκατονταετής Πόλεμος (Αγγλία–Γαλλία) έγινε μεταξύ 1337–1453.", ans: "true", time: 10 },
-          { q: "Ο Εκατονταετής Πόλεμος (Αγγλία–Γαλλία) έγινε μεταξύ 1336–1452.", ans: "false", time: 10 },
-          { q: "Ο Μαύρος Θάνατος συνέβη μεταξύ 1347–1351.", ans: "true", time: 10 },
-          { q: "Ο Μαύρος Θάνατος συνέβη μεταξύ 1346–1350.", ans: "false", time: 10 },
-          { q: "Η Έναρξη Πολιορκίας Κωνσταντινούπολης έγινε 6 Απριλίου 1453.", ans: "true", time: 10 },
-          { q: "Η Έναρξη Πολιορκίας Κωνσταντινούπολης έγινε 7 Απριλίου 1453.", ans: "false", time: 10 }
-        ]
-      },
-      "4": {
-        "easy": [
-          { q: "Η Ανακάλυψη της Αμερικής έγινε το 1492.", ans: "true", time: 10 },
-          { q: "Η Ανακάλυψη της Αμερικής έγινε το 1493.", ans: "false", time: 10 }
-        ],
-        "medium": [
-          { q: "Ο πρώτος περίπλους της Γης έγινε μεταξύ 1519–1522.", ans: "true", time: 10 },
-          { q: "Ο πρώτος περίπλους της Γης έγινε μεταξύ 1518–1521.", ans: "false", time: 10 }
-        ],
-        "hard": [
-          { q: "Οι Θέσεις του Μαρτίνου Λούθηρου στη Βιτεμβέργη έγιναν το 1517.", ans: "true", time: 10 },
-          { q: "Οι Θέσεις του Μαρτίνου Λούθηρου στη Βιτεμβέργη έγιναν το 1518.", ans: "false", time: 10 },
-          { q: "Η δημόσια καύση της παπικής βούλας από τον Λούθηρο έγινε το 1520.", ans: "true", time: 10 },
-          { q: "Η δημόσια καύση της παπικής βούλας από τον Λούθηρο έγινε το 1521.", ans: "false", time: 10 }
-        ]
-      },
-      "5": {
-        "easy": [
-          { q: "Η έναρξη της Ελληνικής Επανάστασης έγινε το 1821.", ans: "true", time: 10 },
-          { q: "Η έναρξη της Ελληνικής Επανάστασης έγινε το 1822.", ans: "false", time: 10 },
-          { q: "Η Μάχη των Ψαρών έγινε 20 Ιουνίου 1824.", ans: "true", time: 10 },
-          { q: "Η Μάχη των Ψαρών έγινε 21 Ιουνίου 1824.", ans: "false", time: 10 },
-          { q: "Το Πρωτόκολλο του Λονδίνου για την Ανεξαρτησία της Ελλάδας υπογράφηκε 3 Φεβρουαρίου 1830.", ans: "true", time: 10 },
-          { q: "Το Πρωτόκολλο του Λονδίνου για την Ανεξαρτησία της Ελλάδας υπογράφηκε 4 Φεβρουαρίου 1830.", ans: "false", time: 10 },
-          { q: "Η Μάχη της Κρήτης έγινε 20–31 Μαΐου 1941.", ans: "true", time: 10 },
-          { q: "Η Μάχη της Κρήτης έγινε 19–30 Μαΐου 1941.", ans: "false", time: 10 },
-          { q: "Η Κατάρριψη της ναζιστικής σημαίας από την Ακρόπολη έγινε 30 Μαΐου 1941.", ans: "true", time: 10 },
-          { q: "Η Κατάρριψη της ναζιστικής σημαίας από την Ακρόπολη έγινε 31 Μαΐου 1941.", ans: "false", time: 10 },
-          { q: "Η Ανατίναξη Γοργοποτάμου έγινε 25 Νοεμβρίου 1942.", ans: "true", time: 10 },
-          { q: "Η Ανατίναξη Γοργοποτάμου έγινε 26 Νοεμβρίου 1942.", ans: "false", time: 10 }
-        ],
-        "medium": [
-          { q: "Η Άλωση της Τριπολιτσάς έγινε 23 Σεπτεμβρίου 1821.", ans: "true", time: 10 },
-          { q: "Η Άλωση της Τριπολιτσάς έγινε 24 Σεπτεμβρίου 1821.", ans: "false", time: 10 },
-          { q: "Η Μάχη του Πέτα έγινε 4 Ιουλίου 1822.", ans: "true", time: 10 },
-          { q: "Η Μάχη του Πέτα έγινε 5 Ιουλίου 1822.", ans: "false", time: 10 },
-          { q: "Η έξοδος του Μεσολογγίου έγινε 10 Απριλίου 1826.", ans: "true", time: 10 },
-          { q: "Η έξοδος του Μεσολογγίου έγινε 11 Απριλίου 1826.", ans: "false", time: 10 },
-          { q: "Η Μάχη του Ναυαρίνου έγινε 20 Οκτωβρίου 1827.", ans: "true", time: 10 },
-          { q: "Η Μάχη του Ναυαρίνου έγινε 21 Οκτωβρίου 1827.", ans: "false", time: 10 },
-          { q: "Η έλευση του Όθωνα στην Ελλάδα έγινε 18 Ιανουαρίου 1833.", ans: "true", time: 10 },
-          { q: "Η έλευση του Όθωνα στην Ελλάδα έγινε 19 Ιανουαρίου 1833.", ans: "false", time: 10 },
-          { q: "Η επανάσταση της 3ης Σεπτεμβρίου 1843 έγινε το 1843.", ans: "true", time: 10 },
-          { q: "Η επανάσταση της 3ης Σεπτεμβρίου 1843 έγινε το 1844.", ans: "false", time: 10 },
-          { q: "Η έξωση του Όθωνα έγινε 12 Οκτωβρίου 1862.", ans: "true", time: 10 },
-          { q: "Η έξωση του Όθωνα έγινε 13 Οκτωβρίου 1862.", ans: "false", time: 10 },
-          { q: "Η εγκαθίδρυση της Βασιλευόμενης Δημοκρατίας στην Ελλάδα έγινε το 1864.", ans: "true", time: 10 },
-          { q: "Η εγκαθίδρυση της Βασιλευόμενης Δημοκρατίας στην Ελλάδα έγινε το 1865.", ans: "false", time: 10 },
-          { q: "Ο Ελληνοτουρκικός Πόλεμος έγινε το 1897.", ans: "true", time: 10 },
-          { q: "Ο Ελληνοτουρκικός Πόλεμος έγινε το 1898.", ans: "false", time: 10 },
-          { q: "Η επανάσταση στο Γουδί έγινε το 1909.", ans: "true", time: 10 },
-          { q: "Η επανάσταση στο Γουδί έγινε το 1910.", ans: "false", time: 10 },
-          { q: "Οι Βαλκανικοί Πόλεμοι έγιναν μεταξύ 1912–1913.", ans: "true", time: 10 },
-          { q: "Οι Βαλκανικοί Πόλεμοι έγιναν μεταξύ 1911–1912.", ans: "false", time: 10 },
-          { q: "Ο Εθνικός Διχασμός ξεκίνησε το 1915.", ans: "true", time: 10 },
-          { q: "Ο Εθνικός Διχασμός ξεκίνησε το 1914.", ans: "false", time: 10 },
-          { q: "Η Μικρασιατική Καταστροφή έγινε το 1922.", ans: "true", time: 10 },
-          { q: "Η Μικρασιατική Καταστροφή έγινε το 1923.", ans: "false", time: 10 },
-          { q: "Το Δημοψήφισμα για την Αβασίλευτη Δημοκρατία έγινε το 1924.", ans: "true", time: 10 },
-          { q: "Το Δημοψήφισμα για την Αβασίλευτη Δημοκρατία έγινε το 1925.", ans: "false", time: 10 },
-          { q: "Η δικτατορία Μεταξά ξεκίνησε το 1936.", ans: "true", time: 10 },
-          { q: "Η δικτατορία Μεταξά ξεκίνησε το 1937.", ans: "false", time: 10 },
-          { q: "Το 'Όχι' του Μεταξά έγινε 28 Οκτωβρίου 1940.", ans: "true", time: 10 },
-          { q: "Το 'Όχι' του Μεταξά έγινε 27 Οκτωβρίου 1940.", ans: "false", time: 10 },
-          { q: "Η Κατοχή Ελλάδας ξεκίνησε Απρίλιο 1941.", ans: "true", time: 10 },
-          { q: "Η Κατοχή Ελλάδας ξεκίνησε Μάρτιο 1941.", ans: "false", time: 10 }
-        ],
-        "hard": [
-          { q: "Η έναρξη της Φιλικής Εταιρείας έγινε το 1814.", ans: "true", time: 10 },
-          { q: "Η έναρξη της Φιλικής Εταιρείας έγινε το 1815.", ans: "false", time: 10 },
-          { q: "Η Συνθήκη της Κωνσταντινούπολης υπογράφηκε 12 Μαΐου 1832.", ans: "true", time: 10 },
-          { q: "Η Συνθήκη της Κωνσταντινούπολης υπογράφηκε 13 Μαΐου 1832.", ans: "false", time: 10 },
-          { q: "Η δολοφονία του Καποδίστρια έγινε 9 Οκτωβρίου 1831.", ans: "true", time: 10 },
-          { q: "Η δολοφονία του Καποδίστρια έγινε 10 Οκτωβρίου 1831.", ans: "false", time: 10 },
-          { q: "Η κατάργηση της μοναρχίας στην Ελλάδα έγινε το 1973.", ans: "true", time: 10 },
-          { q: "Η κατάργηση της μοναρχίας στην Ελλάδα έγινε το 1972.", ans: "false", time: 10 }
-        ]
-      }
-    };
+    <script>
+        const quizData = {
+            "1": {
+                "medium": [
+                    { q: "Η Πρώτη Ολυμπιάδα πραγματοποιήθηκε το 776 π.Χ.", ans: "true", time: 10 },
+                    { q: "Η Πρώτη Ολυμπιάδα πραγματοποιήθηκε το 777 π.Χ.", ans: "false", time: 10 }
+                ],
+                "easy": [
+                    { q: "Η Μάχη του Μαραθώνα έγινε το 490 π.Χ.", ans: "true", time: 10 },
+                    { q: "Η Μάχη του Μαραθώνα έγινε το 489 π.Χ.", ans: "false", time: 10 }
+                ],
+                "hard": []
+            },
+            "2": {
+                "easy": [
+                    { q: "Ο Θάνατος του Μεγάλου Αλεξάνδρου έγινε το 323 π.Χ.", ans: "true", time: 10 },
+                    { q: "Ο Θάνατος του Μεγάλου Αλεξάνδρου έγινε το 322 π.Χ.", ans: "false", time: 10 }
+                ],
+                "medium": [
+                    { q: "Η ίδρυση Θεσσαλονίκης έγινε το 316 π.Χ.", ans: "true", time: 10 },
+                    { q: "Η ίδρυση Θεσσαλονίκης έγινε το 317 π.Χ.", ans: "false", time: 10 }
+                ],
+                "hard": [
+                    { q: "Η ίδρυση Αντιόχειας έγινε το 300 π.Χ.", ans: "true", time: 10 },
+                    { q: "Η ίδρυση Αντιόχειας έγινε το 301 π.Χ.", ans: "false", time: 10 }
+                ]
+            },
+            "3": {
+                "easy": [
+                    { q: "Η ανάληψη του Ιουστινιανού Α' έγινε το 527 μ.Χ.", ans: "true", time: 10 },
+                    { q: "Η ανάληψη του Ιουστινιανού Α' έγινε το 528 μ.Χ.", ans: "false", time: 10 }
+                ],
+                "medium": [
+                    { q: "Το τέλος της Δυτικής Ρωμαϊκής Αυτοκρατορίας έγινε το 476 μ.Χ.", ans: "true", time: 10 },
+                    { q: "Το τέλος της Δυτικής Ρωμαϊκής Αυτοκρατορίας έγινε το 475 μ.Χ.", ans: "false", time: 10 }
+                ],
+                "hard": [
+                    { q: "Η Άλωση Ρώμης από τους Βησιγότθους έγινε 23 Αυγούστου 410 μ.Χ.", ans: "true", time: 10 },
+                    { q: "Η Άλωση Ρώμης από τους Βησιγότθους έγινε 24 Αυγούστου 410 μ.Χ.", ans: "false", time: 10 }
+                ]
+            },
+            "4": {
+                "easy": [
+                    { q: "Η Ανακάλυψη της Αμερικής έγινε το 1492.", ans: "true", time: 10 },
+                    { q: "Η Ανακάλυψη της Αμερικής έγινε το 1493.", ans: "false", time: 10 }
+                ],
+                "medium": [
+                    { q: "Ο πρώτος περίπλους της Γης έγινε μεταξύ 1519–1522.", ans: "true", time: 10 },
+                    { q: "Ο πρώτος περίπλους της Γης έγινε μεταξύ 1518–1521.", ans: "false", time: 10 }
+                ],
+                "hard": [
+                    { q: "Οι Θέσεις του Μαρτίνου Λούθηρου στη Βιτεμβέργη έγιναν το 1517.", ans: "true", time: 10 },
+                    { q: "Οι Θέσεις του Μαρτίνου Λούθηρου στη Βιτεμβέργη έγιναν το 1518.", ans: "false", time: 10 }
+                ]
+            },
+            "5": {
+                "easy": [
+                    { q: "Η έναρξη της Ελληνικής Επανάστασης έγινε το 1821.", ans: "true", time: 10 },
+                    { q: "Η έναρξη της Ελληνικής Επανάστασης έγινε το 1822.", ans: "false", time: 10 }
+                ],
+                "medium": [
+                    { q: "Η Άλωση της Τριπολιτσάς έγινε 23 Σεπτεμβρίου 1821.", ans: "true", time: 10 },
+                    { q: "Η Άλωση της Τριπολιτσάς έγινε 24 Σεπτεμβρίου 1821.", ans: "false", time: 10 }
+                ],
+                "hard": [
+                    { q: "Η Ανατίναξη του 'Έσσεξ' έγινε 12 Σεπτεμβρίου 1821.", ans: "true", time: 10 },
+                    { q: "Η Ανατίναξη του 'Έσσεξ' έγινε 13 Σεπτεμβρίου 1821.", ans: "false", time: 10 }
+                ]
+            }
+        };
 
-    let category, level, idx = 0, score = 0, timerId;
-    const timerEl = document.getElementById('timer');
-    const boardEl = document.getElementById('scoreboard');
-    const qText = document.getElementById('question-text');
-    const feedback = document.getElementById('feedback');
-    const qCard = document.getElementById('quiz-card');
-    const controls = document.getElementById('controls');
-    const restart = document.getElementById('restart-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const options = document.getElementById('options');
+        const timerEl = document.getElementById('timer');
+        const boardEl = document.getElementById('scoreboard');
+        const qText = document.getElementById('question-text');
+        const feedback = document.getElementById('feedback');
+        const qCard = document.getElementById('quiz-card');
+        const controls = document.getElementById('controls');
+        const restart = document.getElementById('restart-btn');
+        const options = document.getElementById('options');
 
-    function clearSel(group) { group.forEach(b => b.classList.remove('selected')); }
+        let category = null;
+        let level = null;
+        let idx = 0;
+        let score = 0;
+        let timerId = null;
+        let currentQuestion = null;
 
-    document.querySelectorAll('.categories .btn').forEach(b => {
-      b.onclick = () => {
-        clearSel([...document.querySelectorAll('.categories .btn')]);
-        b.classList.add('selected');
-        category = b.dataset.cat;
-        checkStart();
-      };
-    });
-
-    document.querySelectorAll('.levels .btn').forEach(b => {
-      b.onclick = () => {
-        clearSel([...document.querySelectorAll('.levels .btn')]);
-        b.classList.add('selected');
-        level = b.dataset.level;
-        checkStart();
-      };
-    });
-
-    function checkStart() {
-      if (category && level) {
-        // Shuffle questions for the selected category and level
-        if (quizData[category] && quizData[category][level]) {
-          quizData[category][level].sort(() => Math.random() - 0.5);
+        function clearSel(group) { 
+            group.forEach(b => b.classList.remove('selected')); 
         }
-        idx = 0;
-        controls.hidden = true;
-        showQuestion();
-      }
-    }
 
-    function showQuestion() {
-      if (!quizData[category] || !quizData[category][level] || idx >= quizData[category][level].length) {
-        return endQuiz();
-      }
-      const data = quizData[category][level][idx];
-      qText.textContent = data.q;
-      feedback.textContent = '';
-      qCard.hidden = false;
-      options.hidden = false;
-      nextBtn.hidden = true;
-      startTimer(data.time);
-    }
-
-    function startTimer(sec) {
-      clearInterval(timerId);
-      let t = sec;
-      timerEl.textContent = t + '"';
-      timerId = setInterval(() => {
-        t--;
-        timerEl.textContent = t + '"';
-        if (t <= 0) {
-          clearInterval(timerId);
-          answer(null);
+        // Καθαρίζει την οθόνη από ερώτηση και feedback
+        function clearQuestion() {
+            qText.textContent = '';
+            feedback.textContent = '';
+            qCard.hidden = true;
+            clearTimeout(timerId);
+            timerEl.textContent = '00"';
         }
-      }, 1000);
-    }
 
-    function answer(selected) {
-      clearInterval(timerId);
-      const correct = quizData[category][level][idx].ans;
-      if (selected === correct) {
-        score += 10;
-        feedback.textContent = `Σωστά! Η σωστή απάντηση ήταν: ${correct === 'true' ? 'Σωστό' : 'Λάθος'}`;
-      } else {
-        feedback.textContent = `Λάθος! Η σωστή απάντηση ήταν: ${correct === 'true' ? 'Σωστό' : 'Λάθος'}`;
-      }
-      boardEl.textContent = `Score: ${score}`;
-      options.hidden = true;
-      nextBtn.hidden = false;
-    }
+        // Εμφανίζει τα κουμπιά επιλογής κατηγορίας/επιπέδου
+        function showControls() {
+            controls.hidden = false;
+            clearQuestion();
+        }
 
-    document.querySelectorAll('.option-btn').forEach(btn => {
-      btn.onclick = () => answer(btn.dataset.opt);
-    });
+        document.querySelectorAll('.categories .btn').forEach(b => {
+            b.onclick = () => {
+                clearSel([...document.querySelectorAll('.categories .btn')]);
+                b.classList.add('selected');
+                category = b.dataset.cat;
+                checkStart();
+            };
+        });
 
-    nextBtn.onclick = () => {
-      idx++;
-      showQuestion();
-    };
+        document.querySelectorAll('.levels .btn').forEach(b => {
+            b.onclick = () => {
+                clearSel([...document.querySelectorAll('.levels .btn')]);
+                b.classList.add('selected');
+                level = b.dataset.level;
+                checkStart();
+            };
+        });
 
-    function endQuiz() {
-      qCard.hidden = true;
-      restart.hidden = false;
-      controls.hidden = false;
-    }
+        function checkStart() {
+            if (category && level) {
+                // Shuffle questions for the selected category and level
+                if (quizData[category] && quizData[category][level]) {
+                    quizData[category][level].sort(() => Math.random() - 0.5);
+                }
+                idx = 0;
+                score = 0;
+                boardEl.textContent = 'Score: 0';
+                controls.hidden = true;
+                showQuestion();
+            }
+        }
 
-    restart.onclick = () => {
-      category = level = null;
-      idx = 0;
-      score = 0;
-      boardEl.textContent = 'Score: 0';
-      restart.hidden = true;
-      clearSel([...document.querySelectorAll('.btn')]);
-    };
-  </script>
+        function showQuestion() {
+            if (!quizData[category] || !quizData[category][level] || idx >= quizData[category][level].length) {
+                return endQuiz();
+            }
+            
+            currentQuestion = quizData[category][level][idx];
+            qText.textContent = currentQuestion.q;
+            feedback.textContent = '';
+            qCard.hidden = false;
+            startTimer(currentQuestion.time);
+        }
+
+        function startTimer(sec) {
+            clearInterval(timerId);
+            let t = sec;
+            timerEl.textContent = t + '"';
+            timerId = setInterval(() => {
+                t--;
+                timerEl.textContent = t + '"';
+                if (t <= 0) {
+                    clearInterval(timerId);
+                    answer(null);
+                }
+            }, 1000);
+        }
+
+        function answer(selected) {
+            clearInterval(timerId);
+            const correct = currentQuestion.ans;
+            
+            if (selected === correct) {
+                score += 10;
+                feedback.textContent = `Σωστά! Η σωστή απάντηση ήταν: ${correct === 'true' ? 'Σωστό' : 'Λάθος'}`;
+            } else {
+                feedback.textContent = `Λάθος! Η σωστή απάντηση ήταν: ${correct === 'true' ? 'Σωστό' : 'Λάθος'}`;
+            }
+            
+            boardEl.textContent = `Score: ${score}`;
+            idx++;
+            
+            // Εξαφάνιση της ερώτησης μετά από 1.5 δευτερόλεπτα
+            setTimeout(() => {
+                clearQuestion();
+                // Εμφάνιση νέας ερώτησης μόνο αν υπάρχουν ακόμα ερωτήσεις
+                if (idx < quizData[category][level].length) {
+                    showControls();
+                } else {
+                    endQuiz();
+                }
+            }, 1500);
+        }
+
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.onclick = () => answer(btn.dataset.opt);
+        });
+
+        function endQuiz() {
+            qCard.hidden = false;
+            qText.textContent = `Το quiz τελείωσε! Το τελικό σου σκορ είναι: ${score}`;
+            feedback.textContent = '';
+            options.hidden = true;
+            restart.hidden = false;
+        }
+
+        restart.onclick = () => {
+            category = level = null;
+            idx = 0;
+            score = 0;
+            boardEl.textContent = 'Score: 0';
+            restart.hidden = true;
+            clearSel([...document.querySelectorAll('.btn')]);
+            options.hidden = false;
+            showControls();
+        };
+    </script>
 </body>
 </html>
