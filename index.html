@@ -4,330 +4,116 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>History and a Day Quiz</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Variables for better maintainability */
-        :root {
-            --primary-color: #1abc9c; /* Teal */
-            --secondary-color: #e67e22; /* Carrot Orange */
-            --dark-blue: #34495e; /* Wet Asphalt */
-            --light-gray: #f5f5f5;
-            --medium-gray: #ecf0f1;
-            --white: #ffffff;
-            --text-dark: #333;
-
-            /* Category Colors */
-            --cat1-bg: #a3d5ff; /* Light Blue */
-            --cat2-bg: #ffb3c1; /* Light Pink */
-            --cat3-bg: #fff5b7; /* Light Yellow */
-            --cat4-bg: #c1ffd7; /* Light Green */
-            --cat5-bg: #d9b3ff; /* Light Purple */
-
-            /* Level Colors */
-            --easy-color: #2ecc71; /* Emerald Green */
-            --medium-color: #f1c40f; /* Sunflower Yellow */
-            --hard-color: #e74c3c; /* Alizarin Red */
-        }
-
-        /* Base Styles */
-        body {
-            font-family: 'Roboto', Arial, sans-serif; /* Using Roboto for modern look */
-            background: var(--light-gray);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            color: var(--text-dark);
-            -webkit-text-size-adjust: 100%; /* Prevent text scaling on orientation change */
-        }
-
-        /* Utility Classes */
-        .hidden {
-            display: none !important;
-        }
-
-        /* Credit Section */
+        body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
         .credit {
             text-align: center;
-            padding: 0.75rem;
-            font-size: 0.9rem; /* Slightly smaller for mobile */
-            background: var(--medium-gray);
+            padding: 0.5rem;
+            font-size: 1.35rem;
+            background: #ecf0f1;
             font-style: italic;
-            color: var(--dark-blue);
         }
-        .credit span {
-            display: block;
-            font-size: 0.8rem; /* Even smaller for secondary info */
-            margin-top: 0.2rem;
-        }
-
-        /* Header */
-        header {
-            background: var(--primary-color);
-            color: var(--white);
-            padding: 1rem;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex; /* Use flexbox for better alignment */
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-        }
-        header h1 {
-            margin: 0;
-            font-size: 1.4rem; /* Adjusted for mobile */
-            font-weight: 700;
-            flex-grow: 1; /* Allow title to take available space */
-            text-align: center; /* Center align title */
-            order: 1; /* Keep title in the middle visually */
-            width: 100%; /* Take full width on small screens */
-            padding-bottom: 0.5rem; /* Space below title if wrapped */
-        }
-        header .timer,
-        header .scoreboard {
-            position: static; /* Remove absolute positioning for mobile */
-            transform: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 0.4rem;
-            font-weight: bold;
-            font-size: 0.95rem; /* Adjusted for mobile */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            margin: 0.2rem; /* Add some margin for spacing when wrapped */
-        }
-        header .timer {
-            background: var(--secondary-color);
-            order: 3; /* Position timer to the right */
-        }
-        header .scoreboard {
-            background: var(--dark-blue);
-            color: var(--white);
-            order: 2; /* Position scoreboard to the left */
-        }
-
-        /* Controls Section */
-        .controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 1.5rem 0.5rem; /* Reduced margins for mobile */
-        }
-        .btn-group {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap; /* Allow buttons to wrap */
-            margin: 0.5rem 0;
-            gap: 0.5rem; /* Reduced gap for tighter packing */
-            width: 100%; /* Ensure groups take full width */
-            padding: 0 0.5rem; /* Inner padding for alignment */
-        }
-        .btn {
-            padding: 0.75rem 1.2rem; /* Reduced padding */
-            border: none;
-            border-radius: 1.25rem; /* Slightly less rounded for a cleaner look */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            font-size: 0.95rem; /* Adjusted for mobile */
-            font-weight: bold;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, outline 0.2s ease;
-            flex: 1 1 auto; /* Allow buttons to grow/shrink based on space */
-            min-width: 120px; /* Minimum width before wrapping */
-            max-width: 48%; /* Max width for two columns on wider mobile */
-            text-align: center;
-            box-sizing: border-box; /* Include padding/border in element's total width */
-        }
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-        }
-        .btn.selected {
-            outline: 3px solid var(--dark-blue); /* Thinner outline for mobile */
-            outline-offset: 2px;
-            transform: scale(1.01);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        }
-
-        /* Category specific colors */
-        .category-1 { background: var(--cat1-bg); color: var(--dark-blue); }
-        .category-2 { background: var(--cat2-bg); color: var(--dark-blue); }
-        .category-3 { background: var(--cat3-bg); color: var(--text-dark); }
-        .category-4 { background: var(--cat4-bg); color: var(--dark-blue); }
-        .category-5 { background: var(--cat5-bg); color: var(--dark-blue); }
-
-        /* Level specific colors */
-        .level-easy { background: var(--easy-color); color: var(--white); }
-        .level-medium { background: var(--medium-color); color: var(--text-dark); }
-        .level-hard { background: var(--hard-color); color: var(--white); }
-
-        /* Quiz Container & Card */
+        .credit span { display: block; }
+        header { background: #1abc9c; color: white; padding: 1rem; text-align: center; position: relative; }
+        header h1 { margin: 0; font-size: 1.5rem; }
+        header .timer { position: absolute; top: 1rem; right: 1rem; background: #e67e22; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: bold; }
+        header .scoreboard { position: absolute; top: 1rem; left: 1rem; background: #34495e; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: bold; }
+        .controls { display: flex; flex-direction: column; align-items: center; margin: 2rem 0; }
+        .btn-group { display: flex; justify-content: center; flex-wrap: wrap; margin: 0.5rem; }
+        .btn { padding: 0.75rem 1.5rem; margin: 0.25rem; border: none; border-radius: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; font-size: 1rem; transition: transform 0.1s; }
+        .btn:hover { transform: scale(1.05); }
+        .btn.selected { box-shadow: 0 0 0 3px #34495e; }
+        .category-1 { background: #a3d5ff; }
+        .category-2 { background: #ffb3c1; }
+        .category-3 { background: #fff5b7; }
+        .category-4 { background: #c1ffd7; }
+        .category-5 { background: #d9b3ff; }
+        .level-easy { background: #2ecc71; color: white; }
+        .level-medium { background: #f1c40f; color: #333; }
+        .level-hard { background: #e74c3c; color: white; }
         .quiz-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 50vh; /* Ensure card is visible */
+            min-height: 50vh;
             padding: 1rem;
         }
         .quiz-card {
-            background: linear-gradient(180deg, var(--white), #f0f0f0);
-            border-radius: 1rem; /* Standard border radius */
+            background: linear-gradient(180deg, #ffffff, #e0e0e0);
+            border-radius: 1rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            padding: 1.5rem; /* Reduced padding for mobile */
-            max-width: 95%; /* Take almost full width on mobile */
+            padding: 2rem;
+            max-width: 600px;
             width: 100%;
             text-align: center;
-            border: 1px solid #ddd;
-            box-sizing: border-box; /* Include padding/border in total width */
         }
-        .question {
-            font-size: 1.3rem; /* Adjusted for mobile */
-            margin-bottom: 1.5rem;
-            font-weight: bold;
-            color: var(--dark-blue);
-        }
+        .question { font-size: 1.25rem; margin-bottom: 1.5rem; }
         .options {
             display: flex;
-            flex-direction: column; /* Stack options vertically on mobile */
-            gap: 0.75rem; /* Space between stacked options */
+            justify-content: center;
+            gap: 1rem;
             margin-bottom: 1.5rem;
+            flex-wrap: wrap;
         }
         .option-btn {
-            padding: 0.8rem 1.5rem;
+            padding: 0.75rem 1.5rem;
             font-size: 1rem;
             border: none;
             border-radius: 0.75rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            width: 100%; /* Take full width when stacked */
-            font-weight: 600;
+            transition: transform 0.1s;
+            min-width: 120px;
         }
-        .option-btn:hover {
-            transform: translateY(-1px);
-        }
-        .true-btn { background: var(--easy-color); color: var(--white); }
-        .false-btn { background: var(--hard-color); color: var(--white); }
-
-        /* Feedback and Footer */
+        .option-btn:hover { transform: scale(1.05); }
+        .true-btn { background: #2ecc71; color: white; }
+        .false-btn { background: #e74c3c; color: white; }
         .feedback {
             font-weight: bold;
-            margin: 1rem 0;
-            text-align: center;
-            min-height: 24px; /* Ensure consistent height */
-            font-size: 1.1rem;
-            color: var(--dark-blue);
-        }
-        .footer {
-            text-align: center;
             margin: 1.5rem 0;
-            padding-bottom: 1.5rem;
+            text-align: center;
+            min-height: 24px;
         }
-
-        /* Desktop Adjustments (larger screens) */
-        @media (min-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
-                width: auto; /* Revert width */
-                padding-bottom: 0; /* Remove padding */
-            }
-            header .timer,
-            header .scoreboard {
-                position: absolute; /* Revert to absolute positioning */
-                top: 1rem;
-                transform: none;
-                margin: 0;
-                font-size: 1.1rem;
-            }
-            header .timer { right: 1rem; order: unset; }
-            header .scoreboard { left: 1rem; order: unset; }
-
-            .controls {
-                margin: 2.5rem 1rem;
-            }
-            .btn-group {
-                gap: 0.75rem;
-                width: auto;
-                padding: 0;
-            }
-            .btn {
-                padding: 0.85rem 1.75rem;
-                font-size: 1.05rem;
-                min-width: 140px;
-                max-width: unset; /* Remove max-width for desktop */
-            }
-            .quiz-container {
-                min-height: 40vh;
-                padding: 1.5rem;
-            }
-            .quiz-card {
-                padding: 2.5rem;
-                max-width: 650px;
-            }
-            .question {
-                font-size: 1.5rem;
-            }
-            .options {
-                flex-direction: row; /* Options side-by-side on desktop */
-                gap: 1.25rem;
-            }
-            .option-btn {
-                padding: 1rem 2rem;
-                font-size: 1.1rem;
-                min-width: 150px;
-                width: auto; /* Revert width for side-by-side */
-            }
-            .feedback {
-                margin: 1.5rem 0;
-                font-size: 1.2rem;
-            }
-            .footer {
-                margin: 2.5rem 0;
-                padding-bottom: 2rem;
-            }
-        }
+        .footer { text-align: center; margin: 2rem 0; }
     </style>
 </head>
 <body>
-    <div class="credit">
-        Created by Panagiotis Domvros 2025 (CC BY-NC)
-        <span>Διευθυντής 1ου Γυμνασίου Πυλαίας</span>
-    </div>
+    <div class="credit">Created by Panagiotis Domvros 2025 (CC BY-NC)<span>Διευθυντής 1ου Γυμνασίου Πυλαίας</span></div>
     <header>
-        <div class="scoreboard" id="scoreboard">Score: 0</div>
         <h1>History and a Day</h1>
         <div class="timer" id="timer">00"</div>
+        <div class="scoreboard" id="scoreboard">Score: 0</div>
     </header>
 
-    <main>
-        <section class="controls" id="controls">
-            <div class="btn-group categories">
-                <button class="btn category-1" data-cat="1">🌟 Αρχαιότητα</button>
-                <button class="btn category-2" data-cat="2">🏺 Ελληνιστικοί & Ρωμαϊκοί</button>
-                <button class="btn category-3" data-cat="3">🏰 Βυζαντινοί Χρόνοι</button>
-                <button class="btn category-4" data-cat="4">🛡️ Νεότεροι Χρόνοι</button>
-                <button class="btn category-5" data-cat="5">🚀 Σύγχρονη Εποχή</button>
-            </div>
-            <div class="btn-group levels">
-                <button class="btn level-easy" data-level="easy">😊 Εύκολο</button>
-                <button class="btn level-medium" data-level="medium">😐 Μέτριο</button>
-                <button class="btn level-hard" data-level="hard">😣 Δύσκολο</button>
-            </div>
-        </section>
+    <section class="controls" id="controls">
+        <div class="btn-group categories">
+            <button class="btn category-1" data-cat="1">🌟 Αρχαιότητα</button>
+            <button class="btn category-2" data-cat="2">🏺 Ελληνιστικοί & Ρωμαϊκοί</button>
+            <button class="btn category-3" data-cat="3">🏰 Βυζαντινοί Χρόνοι</button>
+            <button class="btn category-4" data-cat="4">🛡️ Νεότεροι Χρόνοι</button>
+            <button class="btn category-5" data-cat="5">🚀 Σύγχρονη Εποχή</button>
+        </div>
+        <div class="btn-group levels">
+            <button class="btn level-easy" data-level="easy">😊 Εύκολο</button>
+            <button class="btn level-medium" data-level="medium">😐 Μέτριο</button>
+            <button class="btn level-hard" data-level="hard">😣 Δύσκολο</button>
+        </div>
+    </section>
 
-        <section class="quiz-container">
-            <div class="quiz-card" id="quiz-card" class="hidden"> <div class="question" id="question-text"></div>
-                <div class="options" id="options">
-                    <button class="option-btn true-btn" data-opt="true">✅ Σωστό</button>
-                    <button class="option-btn false-btn" data-opt="false">❌ Λάθος</button>
-                </div>
-                <div class="feedback" id="feedback"></div>
+    <section class="quiz-container">
+        <div class="quiz-card" id="quiz-card" hidden>
+            <div class="question" id="question-text"></div>
+            <div class="options" id="options">
+                <button class="option-btn true-btn" data-opt="true">✅ Σωστό</button>
+                <button class="option-btn false-btn" data-opt="false">❌ Λάθος</button>
             </div>
-        </section>
-    </main>
+            <div class="feedback" id="feedback"></div>
+        </div>
+    </section>
 
-    <footer class="footer">
-        <button id="restart-btn" class="btn level-medium hidden">Ξεκίνα ξανά 🎉</button>
-    </footer>
+    <section class="footer">
+        <button id="restart-btn" class="btn level-medium" hidden>Ξεκίνα ξανά 🎉</button>
+    </section>
 
     <script>
         const quizData = {
@@ -340,11 +126,7 @@
                     { q: "Η Μάχη του Μαραθώνα έγινε το 490 π.Χ.", ans: "true", time: 10 },
                     { q: "Η Μάχη του Μαραθώνα έγινε το 489 π.Χ.", ans: "false", time: 10 }
                 ],
-                "hard": [
-                    // Add more hard questions here for category 1
-                    { q: "Οι πρώτοι γραπτοί νόμοι στην Αθήνα, οι νόμοι του Δράκοντα, θεσπίστηκαν το 621 π.Χ.", ans: "true", time: 15 },
-                    { q: "Οι νόμοι του Δράκοντα θεσπίστηκαν το 620 π.Χ.", ans: "false", time: 15 }
-                ]
+                "hard": []
             },
             "2": {
                 "easy": [
@@ -404,188 +186,147 @@
             }
         };
 
-        // DOM Element Caching
         const timerEl = document.getElementById('timer');
         const boardEl = document.getElementById('scoreboard');
         const qText = document.getElementById('question-text');
-        const feedbackEl = document.getElementById('feedback'); // Renamed for clarity
-        const quizCard = document.getElementById('quiz-card'); // Renamed for clarity
-        const controlsSection = document.getElementById('controls'); // Renamed for clarity
-        const restartBtn = document.getElementById('restart-btn'); // Renamed for clarity
-        const optionsContainer = document.getElementById('options'); // Renamed for clarity
+        const feedback = document.getElementById('feedback');
+        const qCard = document.getElementById('quiz-card');
+        const controls = document.getElementById('controls');
+        const restart = document.getElementById('restart-btn');
+        const options = document.getElementById('options');
 
-        const categoryButtons = document.querySelectorAll('.categories .btn');
-        const levelButtons = document.querySelectorAll('.levels .btn');
-        const optionButtons = document.querySelectorAll('.option-btn');
-
-        // Game State Variables
-        let selectedCategory = null; // Renamed for clarity
-        let selectedLevel = null;    // Renamed for clarity
-        let currentQuestionIndex = 0; // Renamed for clarity
+        let category = null;
+        let level = null;
+        let idx = 0;
         let score = 0;
-        let timerIntervalId = null; // Renamed for clarity
-        let activeQuestion = null; // Renamed for clarity
+        let timerId = null;
+        let currentQuestion = null;
 
-        // Helper Function to remove 'selected' class
-        function clearSelections(buttons) {
-            buttons.forEach(button => button.classList.remove('selected'));
+        function clearSel(group) { 
+            group.forEach(b => b.classList.remove('selected')); 
         }
 
-        // Resets the quiz card display
-        function resetQuizCardDisplay() {
+        // Καθαρίζει την οθόνη από ερώτηση και feedback
+        function clearQuestion() {
             qText.textContent = '';
-            feedbackEl.textContent = '';
-            quizCard.classList.add('hidden'); // Use class for hiding
-            clearInterval(timerIntervalId);
+            feedback.textContent = '';
+            qCard.hidden = true;
+            clearTimeout(timerId);
             timerEl.textContent = '00"';
         }
 
-        // Shows the category/level selection controls
+        // Εμφανίζει τα κουμπιά επιλογής κατηγορίας/επιπέδου
         function showControls() {
-            controlsSection.classList.remove('hidden');
-            resetQuizCardDisplay();
-            restartBtn.classList.add('hidden'); // Hide restart button
-            optionsContainer.classList.remove('hidden'); // Ensure options are visible
+            controls.hidden = false;
+            clearQuestion();
         }
 
-        // Event Listeners for Category Buttons
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                clearSelections(categoryButtons);
-                button.classList.add('selected');
-                selectedCategory = button.dataset.cat;
-                tryStartQuiz();
-            });
+        document.querySelectorAll('.categories .btn').forEach(b => {
+            b.onclick = () => {
+                clearSel([...document.querySelectorAll('.categories .btn')]);
+                b.classList.add('selected');
+                category = b.dataset.cat;
+                checkStart();
+            };
         });
 
-        // Event Listeners for Level Buttons
-        levelButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                clearSelections(levelButtons);
-                button.classList.add('selected');
-                selectedLevel = button.dataset.level;
-                tryStartQuiz();
-            });
+        document.querySelectorAll('.levels .btn').forEach(b => {
+            b.onclick = () => {
+                clearSel([...document.querySelectorAll('.levels .btn')]);
+                b.classList.add('selected');
+                level = b.dataset.level;
+                checkStart();
+            };
         });
 
-        // Checks if both category and level are selected to start quiz
-        function tryStartQuiz() {
-            if (selectedCategory && selectedLevel) {
-                // Defensive check: ensure data exists
-                if (!quizData[selectedCategory] || !quizData[selectedCategory][selectedLevel] || quizData[selectedCategory][selectedLevel].length === 0) { // Added length check
-                    alert('Δεν υπάρχουν ερωτήσεις για αυτή την επιλογή. Παρακαλώ διαλέξτε άλλη κατηγορία/επίπεδο.');
-                    // Reset selections if no questions found
-                    selectedCategory = null;
-                    selectedLevel = null;
-                    clearSelections(categoryButtons);
-                    clearSelections(levelButtons);
-                    return;
-                }
+        function checkStart() {
+            if (category && level) {
                 // Shuffle questions for the selected category and level
-                quizData[selectedCategory][selectedLevel].sort(() => Math.random() - 0.5);
-
-                currentQuestionIndex = 0;
+                if (quizData[category] && quizData[category][level]) {
+                    quizData[category][level].sort(() => Math.random() - 0.5);
+                }
+                idx = 0;
                 score = 0;
                 boardEl.textContent = 'Score: 0';
-                controlsSection.classList.add('hidden');
+                controls.hidden = true;
                 showQuestion();
             }
         }
 
-        // Displays the current question
         function showQuestion() {
-            if (!quizData[selectedCategory] || !quizData[selectedCategory][selectedLevel] || currentQuestionIndex >= quizData[selectedCategory][selectedLevel].length) {
+            if (!quizData[category] || !quizData[category][level] || idx >= quizData[category][level].length) {
                 return endQuiz();
             }
-
-            activeQuestion = quizData[selectedCategory][selectedLevel][currentQuestionIndex];
-            qText.textContent = activeQuestion.q;
-            feedbackEl.textContent = '';
-            quizCard.classList.remove('hidden');
-            startTimer(activeQuestion.time);
+            
+            currentQuestion = quizData[category][level][idx];
+            qText.textContent = currentQuestion.q;
+            feedback.textContent = '';
+            qCard.hidden = false;
+            startTimer(currentQuestion.time);
         }
 
-        // Starts the question timer
-        function startTimer(seconds) {
-            clearInterval(timerIntervalId);
-            let timeLeft = seconds;
-            timerEl.textContent = timeLeft + '"';
-            timerIntervalId = setInterval(() => {
-                timeLeft--;
-                timerEl.textContent = timeLeft + '"';
-                if (timeLeft <= 0) {
-                    clearInterval(timerIntervalId);
-                    handleAnswer(null); // No answer given (time ran out)
+        function startTimer(sec) {
+            clearInterval(timerId);
+            let t = sec;
+            timerEl.textContent = t + '"';
+            timerId = setInterval(() => {
+                t--;
+                timerEl.textContent = t + '"';
+                if (t <= 0) {
+                    clearInterval(timerId);
+                    answer(null);
                 }
             }, 1000);
         }
 
-        // Handles user's answer
-        function handleAnswer(selectedOption) {
-            clearInterval(timerIntervalId);
-            const correctAnswer = activeQuestion.ans;
-
-            if (selectedOption === correctAnswer) {
+        function answer(selected) {
+            clearInterval(timerId);
+            const correct = currentQuestion.ans;
+            
+            if (selected === correct) {
                 score += 10;
-                feedbackEl.textContent = `Σωστά! ✅`;
-                feedbackEl.style.color = getCssVariableValue('--easy-color'); // Green feedback
+                feedback.textContent = `Σωστά! Η σωστή απάντηση ήταν: ${correct === 'true' ? 'Σωστό' : 'Λάθος'}`;
             } else {
-                feedbackEl.textContent = `Λάθος! ❌ Η σωστή απάντηση ήταν: ${correctAnswer === 'true' ? 'Σωστό' : 'Λάθος'}`;
-                feedbackEl.style.color = getCssVariableValue('--hard-color'); // Red feedback
+                feedback.textContent = `Λάθος! Η σωστή απάντηση ήταν: ${correct === 'true' ? 'Σωστό' : 'Λάθος'}`;
             }
-
+            
             boardEl.textContent = `Score: ${score}`;
-            currentQuestionIndex++;
-
-            // Wait a moment before moving to the next question or ending the quiz
+            idx++;
+            
+            // Εξαφάνιση της ερώτησης μετά από 1.5 δευτερόλεπτα
             setTimeout(() => {
-                resetQuizCardDisplay();
-                if (currentQuestionIndex < quizData[selectedCategory][selectedLevel].length) {
-                    showQuestion(); // Show next question
+                clearQuestion();
+                // Εμφάνιση νέας ερώτησης μόνο αν υπάρχουν ακόμα ερωτήσεις
+                if (idx < quizData[category][level].length) {
+                    showControls();
                 } else {
-                    endQuiz(); // Quiz finished
+                    endQuiz();
                 }
-            }, 1500); // 1.5 seconds feedback display
+            }, 1500);
         }
 
-        // Event Listeners for True/False buttons
-        optionButtons.forEach(button => {
-            button.addEventListener('click', () => handleAnswer(button.dataset.opt));
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.onclick = () => answer(btn.dataset.opt);
         });
 
-        // Ends the quiz and displays final score
         function endQuiz() {
-            quizCard.classList.remove('hidden'); // Ensure card is visible
+            qCard.hidden = false;
             qText.textContent = `Το quiz τελείωσε! Το τελικό σου σκορ είναι: ${score}`;
-            feedbackEl.textContent = '';
-            optionsContainer.classList.add('hidden'); // Hide options
-            restartBtn.classList.remove('hidden'); // Show restart button
-            timerEl.textContent = '00"'; // Reset timer display
+            feedback.textContent = '';
+            options.hidden = true;
+            restart.hidden = false;
         }
 
-        // Restart button functionality
-        restartBtn.addEventListener('click', () => {
-            selectedCategory = null;
-            selectedLevel = null;
-            currentQuestionIndex = 0;
+        restart.onclick = () => {
+            category = level = null;
+            idx = 0;
             score = 0;
             boardEl.textContent = 'Score: 0';
-            restartBtn.classList.add('hidden');
-            clearSelections([...categoryButtons, ...levelButtons]); // Clear all button selections
-            optionsContainer.classList.remove('hidden'); // Ensure options are visible for next round
-            feedbackEl.style.color = getCssVariableValue('--dark-blue'); // Reset feedback color
-            showControls(); // Go back to selection screen
-        });
-
-        // Helper function to get computed CSS variable value (for JS color application)
-        function getCssVariableValue(variable) { // Renamed for clarity
-            const style = getComputedStyle(document.documentElement);
-            const value = style.getPropertyValue(variable).trim();
-            return value;
-        }
-
-        // Initial state
-        showControls();
+            restart.hidden = true;
+            clearSel([...document.querySelectorAll('.btn')]);
+            options.hidden = false;
+            showControls();
+        };
     </script>
 </body>
 </html>
